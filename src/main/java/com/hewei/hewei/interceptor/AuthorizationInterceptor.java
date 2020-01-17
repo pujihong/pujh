@@ -3,6 +3,8 @@ package com.hewei.hewei.interceptor;
 import com.hewei.hewei.base.Constant;
 import com.hewei.hewei.base.RedisService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
@@ -21,7 +23,10 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
 
     public boolean preHandle(HttpServletRequest request,
                              HttpServletResponse response, Object handler) throws Exception {
-        String requestURI = request.getRequestURI();
+        // String requestURI = request.getRequestURI();
+        if(HttpMethod.OPTIONS.toString().equals(request.getMethod())) {
+            return true;
+        }
         // 从header中得到token
         String token = request.getHeader(Constant.AUTHORIZATION);
         if (redisService.checkToken(token)) {

@@ -58,7 +58,7 @@ public class MvcConfig implements WebMvcConfigurer {
                 //是否允许证书 不再默认开启
                 .allowCredentials(true)
                 //设置允许的方法
-                .allowedMethods("*")
+                .allowedMethods("POST", "GET", "PUT", "OPTIONS", "DELETE")
                 //跨域允许时间
                 .maxAge(3600);
     }
