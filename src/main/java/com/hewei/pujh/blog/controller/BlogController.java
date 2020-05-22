@@ -1,11 +1,10 @@
-package com.hewei.pujh.sys.controller;
+package com.hewei.pujh.blog.controller;
 
 
 import com.hewei.pujh.annotation.CurrentUser;
 import com.hewei.pujh.base.ResultModel;
-import com.hewei.pujh.sys.service.ISysMenuService;
+import com.hewei.pujh.blog.service.IBlogLabelService;
 import com.hewei.pujh.sys.vo.UserVo;
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,23 +15,21 @@ import springfox.documentation.annotations.ApiIgnore;
 
 /**
  * <p>
- * 菜单表 前端控制器
+ *  前端控制器
  * </p>
  *
  * @author pujihong
- * @since 2020-04-02
+ * @since 2020-05-22
  */
 @RestController
-@RequestMapping("/sys/menu")
-@Api(tags = "菜单相关接口")
-public class SysMenuController {
-
+@RequestMapping("/blog")
+public class BlogController {
     @Autowired
-    private ISysMenuService menuService;
+    private IBlogLabelService getUserBlogLabel;
 
-    @PostMapping(path = "/getUserMenu")
-    @ApiOperation(value = "查询用户的菜单")
-    public ResultModel getUserNavMenu(@ApiIgnore @CurrentUser UserVo user) {
-        return ResultModel.success(menuService.getUserMenu(user.getId()));
+    @PostMapping(path = "/getUserBlogLabel")
+    @ApiOperation(value = "查询用户博客标签")
+    public ResultModel getUserBlogLabel(@ApiIgnore @CurrentUser UserVo user) {
+        return ResultModel.success(getUserBlogLabel.getUserBlogLabel(user.getId()));
     }
 }

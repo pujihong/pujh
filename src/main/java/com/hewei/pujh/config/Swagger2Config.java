@@ -10,6 +10,7 @@ import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.schema.ModelRef;
 import springfox.documentation.service.ApiInfo;
+import springfox.documentation.service.ApiKey;
 import springfox.documentation.service.Contact;
 import springfox.documentation.service.Parameter;
 import springfox.documentation.spi.DocumentationType;
@@ -32,21 +33,28 @@ import java.util.List;
 public class Swagger2Config {
     /*
       api接口包扫描路径
-      这个不能适用通配符 比如 com.hewei.hewei.*.controller
+      这个不能适用通配符 比如 com.hewei.pujh.*.controller
       解决
       1、多个路径可使用公共拥有路径
       2、 .apis(RequestHandlerSelectors.withClassAnnotation(RestController.class))
       */
-    private static final String SWAGGER_SCAN_BASE_PACKAGE = "com.hewei.hewei";
+    private static final String SWAGGER_SCAN_BASE_PACKAGE = "com.hewei.pujh";
     private static final String VERSION = "1.0";
 
     @Bean
     public Docket createRestApi() {
-        /* 统一添加token */
-        ParameterBuilder tokenPar = new ParameterBuilder();
+        /* 统一添加token两种方式 */
+
+        /*参数 配置 */
+     /*   ParameterBuilder tokenPar = new ParameterBuilder();
         List<Parameter> pars = new ArrayList<Parameter>();
         tokenPar.name(Constant.AUTHORIZATION).description("token").modelRef(new ModelRef("string")).parameterType("header").required(true).build();
-        pars.add(tokenPar.build());
+        pars.add(tokenPar.build());*/
+
+        /* 全局配置 */
+        List<ApiKey> result = new ArrayList<>();
+        ApiKey apiKey = new ApiKey("authorization", "authorization", "header");
+        result.add(apiKey);
 
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
@@ -54,7 +62,9 @@ public class Swagger2Config {
                 .apis(RequestHandlerSelectors.basePackage(SWAGGER_SCAN_BASE_PACKAGE))
                 .paths(PathSelectors.any()) // 可以根据url路径设置哪些请求加入文档，忽略哪些请求
                 .build()
-                .globalOperationParameters(pars);
+                .securitySchemes(result);
+            //    .globalOperationParameters(pars); // 以参数形式
+
     }
 
     private ApiInfo apiInfo() {

@@ -57,7 +57,7 @@ public class CodeGenerator {
         // 包配置
         PackageConfig pc = new PackageConfig();
         pc.setModuleName(scanner("模块名"));
-        pc.setParent("com.hewei.hewei");
+        pc.setParent("com.hewei.pujh");
         mpg.setPackageInfo(pc);
 
         // 自定义配置
@@ -112,11 +112,11 @@ public class CodeGenerator {
         StrategyConfig strategy = new StrategyConfig();
         strategy.setNaming(NamingStrategy.underline_to_camel); //设置命名规则  underline_to_camel 底线变驼峰
         strategy.setColumnNaming(NamingStrategy.underline_to_camel);
-        //      strategy.setSuperEntityClass("com.hewei.hewei.base.BaseEntity");
+        //      strategy.setSuperEntityClass("com.hewei.pujh.base.BaseEntity");
         strategy.setEntityLombokModel(true);
         strategy.setRestControllerStyle(true);
         // 公共父类
-        //      strategy.setSuperControllerClass("com.hewei.hewei.base.BaseController");
+        //      strategy.setSuperControllerClass("com.hewei.pujh.base.BaseController");
         // 写于父类中的公共字段
         //      strategy.setSuperEntityColumns("id");
         strategy.setInclude(scanner("表名，多个英文逗号分割").split(","));
