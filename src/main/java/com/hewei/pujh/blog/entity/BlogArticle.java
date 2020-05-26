@@ -65,6 +65,11 @@ public class BlogArticle implements Serializable {
     private String content;
 
     /**
+     * 内容html格式
+     */
+    private String htmlContent;
+
+    /**
      * 文章简介
      */
     private String description;

@@ -16,5 +16,5 @@ import java.util.List;
  */
 public interface IBlogLabelService extends IService<BlogLabel> {
 
-    List<LabelVo> getUserBlogLabel(Long userId);
+    List<LabelVo> getUserBlogLabelList(Long userId);
 }

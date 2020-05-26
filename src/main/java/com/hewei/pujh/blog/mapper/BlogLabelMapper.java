@@ -19,8 +19,8 @@ import java.util.List;
 public interface BlogLabelMapper extends BaseMapper<BlogLabel> {
 
     @Select({
-            "select id,name from blog_label where deleted = 0 and userId = #{userId} order by sort"
+            "select id,name from blog_label where deleted = 0 and user_id = #{userId} order by sort"
     })
     @ResultType(LabelVo.class)
-    List<LabelVo> getUserBlogLabel(Long userId);
+    List<LabelVo> getUserBlogLabelList(Long userId);
 }

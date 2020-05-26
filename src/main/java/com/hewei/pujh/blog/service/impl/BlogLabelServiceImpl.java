@@ -24,7 +24,7 @@ public class BlogLabelServiceImpl extends ServiceImpl<BlogLabelMapper, BlogLabel
     @Resource
     private BlogLabelMapper labelMapper;
     @Override
-    public List<LabelVo> getUserBlogLabel(Long userId) {
-        return labelMapper.getUserBlogLabel(userId);
+    public List<LabelVo> getUserBlogLabelList(Long userId) {
+        return labelMapper.getUserBlogLabelList(userId);
     }
 }

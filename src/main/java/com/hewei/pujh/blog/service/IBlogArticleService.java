@@ -1,7 +1,7 @@
 package com.hewei.pujh.blog.service;
 
-import com.hewei.pujh.blog.entity.BlogArticle;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.hewei.pujh.blog.entity.BlogArticle;
 
 /**
  * <p>
@@ -12,5 +12,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2020-05-22
  */
 public interface IBlogArticleService extends IService<BlogArticle> {
+
+    Boolean saveBlogArticle(String title, Long labelId, String content, String htmlContent, Integer boolMarkdown, Integer boolPublish, Long userId);
 
 }
