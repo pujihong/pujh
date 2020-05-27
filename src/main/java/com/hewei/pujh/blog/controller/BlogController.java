@@ -5,6 +5,7 @@ import com.hewei.pujh.annotation.CurrentUser;
 import com.hewei.pujh.base.ResultModel;
 import com.hewei.pujh.blog.service.IBlogArticleService;
 import com.hewei.pujh.blog.service.IBlogLabelService;
+import com.hewei.pujh.enums.BoolEnum;
 import com.hewei.pujh.sys.vo.UserVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -34,7 +35,7 @@ public class BlogController {
     private IBlogArticleService articleService;
 
     @PostMapping(path = "/getUserBlogLabelList")
-    @ApiOperation(value = "查询用户博客标签")
+    @ApiOperation(value = "查询用户博客标签列表")
     public ResultModel getUserBlogLabelList(@ApiIgnore @CurrentUser UserVo user) {
         return ResultModel.success(getUserBlogLabel.getUserBlogLabelList(user.getId()));
     }
@@ -42,9 +43,13 @@ public class BlogController {
     @PostMapping(path = "/getUserBlogArticleList")
     @ApiOperation(value = "查询用户博客列表")
     public ResultModel getUserBlogArticleList(@ApiIgnore @CurrentUser UserVo user,
-                                              @RequestParam(required = false,defaultValue = "1") Integer pageSize,
-                                              @RequestParam(required = false,defaultValue = "10") Integer pageNum) {
-        return ResultModel.success();
+                                              @RequestParam(required = false) Integer boolPublish,
+                                              @RequestParam(required = false, defaultValue = "1") Integer pageNum,
+                                              @RequestParam(required = false, defaultValue = "10") Integer pageSize) {
+        if (boolPublish != null && BoolEnum.toEnum(boolPublish) == null) {
+            return ResultModel.error(ResultModel.WRONG_PARAMS_ERROR);
+        }
+        return ResultModel.success(articleService.getUserBlogArticleList(pageNum, pageSize, boolPublish, user.getId()));
     }
 
     @PostMapping(path = "/saveBlogArticle")
@@ -56,13 +61,13 @@ public class BlogController {
                                        @RequestParam(required = false) String htmlContent,
                                        @RequestParam(required = false, defaultValue = "1") Integer boolMarkdown,
                                        @RequestParam(required = false, defaultValue = "0") Integer boolPublish) {
-        if(StringUtils.isAnyBlank(title,content)) {
-            return ResultModel.error("参数内容为空");
+        if (StringUtils.isAnyBlank(title, content)) {
+            return ResultModel.error(ResultModel.WRONG_PARAMS_ERROR);
         }
-        if(boolMarkdown == 1 && StringUtils.isBlank(htmlContent)) {
-            return ResultModel.error("参数内容为空");
+        if (boolMarkdown == 1 && StringUtils.isBlank(htmlContent)) {
+            return ResultModel.error(ResultModel.WRONG_PARAMS_ERROR);
         }
-        return ResultModel.success(articleService.saveBlogArticle(title, labelId, content,htmlContent, boolMarkdown, boolPublish, user.getId()));
+        return ResultModel.success(articleService.saveBlogArticle(title, labelId, content, htmlContent, boolMarkdown, boolPublish, user.getId()));
     }
 
 

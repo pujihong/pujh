@@ -4,7 +4,7 @@ import com.hewei.pujh.blog.entity.BlogLabel;
 import com.hewei.pujh.blog.mapper.BlogLabelMapper;
 import com.hewei.pujh.blog.service.IBlogLabelService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.hewei.pujh.blog.vo.LabelVo;
+import com.hewei.pujh.blog.vo.BlogLabelVo;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -24,7 +24,7 @@ public class BlogLabelServiceImpl extends ServiceImpl<BlogLabelMapper, BlogLabel
     @Resource
     private BlogLabelMapper labelMapper;
     @Override
-    public List<LabelVo> getUserBlogLabelList(Long userId) {
+    public List<BlogLabelVo> getUserBlogLabelList(Long userId) {
         return labelMapper.getUserBlogLabelList(userId);
     }
 }

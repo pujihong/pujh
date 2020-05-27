@@ -2,7 +2,7 @@ package com.hewei.pujh.blog.service;
 
 import com.hewei.pujh.blog.entity.BlogLabel;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.hewei.pujh.blog.vo.LabelVo;
+import com.hewei.pujh.blog.vo.BlogLabelVo;
 
 import java.util.List;
 
@@ -16,5 +16,5 @@ import java.util.List;
  */
 public interface IBlogLabelService extends IService<BlogLabel> {
 
-    List<LabelVo> getUserBlogLabelList(Long userId);
+    List<BlogLabelVo> getUserBlogLabelList(Long userId);
 }

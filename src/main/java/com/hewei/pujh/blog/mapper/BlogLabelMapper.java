@@ -2,7 +2,7 @@ package com.hewei.pujh.blog.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.hewei.pujh.blog.entity.BlogLabel;
-import com.hewei.pujh.blog.vo.LabelVo;
+import com.hewei.pujh.blog.vo.BlogLabelVo;
 import org.apache.ibatis.annotations.ResultType;
 import org.apache.ibatis.annotations.Select;
 
@@ -21,6 +21,6 @@ public interface BlogLabelMapper extends BaseMapper<BlogLabel> {
     @Select({
             "select id,name from blog_label where deleted = 0 and user_id = #{userId} order by sort"
     })
-    @ResultType(LabelVo.class)
-    List<LabelVo> getUserBlogLabelList(Long userId);
+    @ResultType(BlogLabelVo.class)
+    List<BlogLabelVo> getUserBlogLabelList(Long userId);
 }
