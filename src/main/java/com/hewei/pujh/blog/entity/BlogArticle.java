@@ -77,7 +77,7 @@ public class BlogArticle implements Serializable {
     /**
      * 标签id
      */
-    private Long lableId;
+    private Long labelId;
 
     /**
      * 用户id

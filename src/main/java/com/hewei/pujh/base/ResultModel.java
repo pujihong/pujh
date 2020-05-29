@@ -14,7 +14,6 @@ public class ResultModel {
     public static final int OLD_PASSWORD_ERROR = -1007;
     public static final int OP_FAILED_ERROR = -1008;
     public static final int PASSWORD_AS_SAME = -1009;
-    public static final int IDNO_EXIST = -1010;
 
 
     private static Map<Integer, String> codeMap = new HashMap<>();

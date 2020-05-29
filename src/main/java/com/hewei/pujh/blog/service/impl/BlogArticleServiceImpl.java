@@ -25,20 +25,38 @@ public class BlogArticleServiceImpl extends ServiceImpl<BlogArticleMapper, BlogA
     private BlogArticleMapper articleMapper;
 
     @Override
-    public Boolean saveBlogArticle(String title, Long labelId, String content,String htmlContent, Integer boolMarkdown, Integer boolPublish, Long userId) {
+    public Boolean saveBlogArticle(Long articleId, String title, Long labelId, String content, String htmlContent, Integer boolMarkdown, Integer boolPublish, Long userId) {
         BlogArticle article = new BlogArticle();
         article.setBoolMarkdown(boolMarkdown);
         article.setBoolPublish(boolPublish);
         article.setTitle(title);
-        article.setLableId(labelId);
+        article.setLabelId(labelId);
         article.setContent(content);
         article.setHtmlContent(htmlContent);
         article.setUserId(userId);
-        return articleMapper.insert(article) == 1;
+        if (articleId != null) {
+            article.setId(articleId);
+            return articleMapper.updateById(article) == 1;
+        } else {
+            return articleMapper.insert(article) == 1;
+        }
     }
 
     @Override
     public IPage<BlogArticleVo> getUserBlogArticleList(Integer pageNum, Integer pageSize, Integer boolPublish, Long userId) {
-        return articleMapper.getUserBlogArticleList(new Page<>(pageNum, pageSize),boolPublish,userId);
+        return articleMapper.getUserBlogArticleList(new Page<>(pageNum, pageSize), boolPublish, userId);
+    }
+
+    @Override
+    public BlogArticleVo getBlogArticleById(Long articleId) {
+        return articleMapper.getBlogArticleById(articleId);
+    }
+
+    @Override
+    public Boolean deleteBlogArticleById(Long articleId) {
+        BlogArticle article = new BlogArticle();
+        article.setId(articleId);
+        article.setDeleted(1);
+        return articleMapper.updateById(article) == 1;
     }
 }

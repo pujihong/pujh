@@ -15,7 +15,11 @@ import com.hewei.pujh.blog.vo.BlogArticleVo;
  */
 public interface IBlogArticleService extends IService<BlogArticle> {
 
-    Boolean saveBlogArticle(String title, Long labelId, String content, String htmlContent, Integer boolMarkdown, Integer boolPublish, Long userId);
+    Boolean saveBlogArticle(Long articleId, String title, Long labelId, String content, String htmlContent, Integer boolMarkdown, Integer boolPublish, Long userId);
 
-    IPage<BlogArticleVo> getUserBlogArticleList(Integer pageNum, Integer pageSize,Integer boolPublish, Long userId);
+    IPage<BlogArticleVo> getUserBlogArticleList(Integer pageNum, Integer pageSize, Integer boolPublish, Long userId);
+
+    BlogArticleVo getBlogArticleById(Long articleId);
+
+    Boolean deleteBlogArticleById(Long articleId);
 }

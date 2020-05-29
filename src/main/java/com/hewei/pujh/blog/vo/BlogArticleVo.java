@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 
 @Data
 public class BlogArticleVo {
+
     private Long id;
     private LocalDateTime createTime;
     /**
@@ -41,8 +42,9 @@ public class BlogArticleVo {
     /**
      * 标签id
      */
-    private Long lableId;
-    private String lableName;
+    private Long labelId;
+
+    private String labelName;
 
     /**
      * 用户id

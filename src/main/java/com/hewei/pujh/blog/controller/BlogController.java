@@ -1,6 +1,5 @@
 package com.hewei.pujh.blog.controller;
 
-
 import com.hewei.pujh.annotation.CurrentUser;
 import com.hewei.pujh.base.ResultModel;
 import com.hewei.pujh.blog.service.IBlogArticleService;
@@ -55,6 +54,7 @@ public class BlogController {
     @PostMapping(path = "/saveBlogArticle")
     @ApiOperation(value = "保存博客")
     public ResultModel saveBlogArticle(@ApiIgnore @CurrentUser UserVo user,
+                                       @RequestParam Long articleId,
                                        @RequestParam String title,
                                        @RequestParam(required = false) Long labelId,
                                        @RequestParam String content,
@@ -67,8 +67,29 @@ public class BlogController {
         if (boolMarkdown == 1 && StringUtils.isBlank(htmlContent)) {
             return ResultModel.error(ResultModel.WRONG_PARAMS_ERROR);
         }
-        return ResultModel.success(articleService.saveBlogArticle(title, labelId, content, htmlContent, boolMarkdown, boolPublish, user.getId()));
+        boolean result = articleService.saveBlogArticle(articleId, title, labelId, content, htmlContent, boolMarkdown, boolPublish, user.getId());
+        if (result) {
+            return ResultModel.success();
+        } else {
+            return ResultModel.error(ResultModel.OP_FAILED_ERROR);
+        }
     }
 
+    @PostMapping(path = "/getBlogArticleById")
+    @ApiOperation(value = "查询博客详情")
+    public ResultModel getBlogArticleById(@RequestParam Long articleId) {
+        return ResultModel.success(articleService.getBlogArticleById(articleId));
+    }
+
+    @PostMapping(path = "/deleteBlogArticleById")
+    @ApiOperation(value = "删除博客信息")
+    public ResultModel deleteBlogArticleById(@RequestParam Long articleId) {
+        boolean result = articleService.deleteBlogArticleById(articleId);
+        if (result) {
+            return ResultModel.success();
+        } else {
+            return ResultModel.error(ResultModel.OP_FAILED_ERROR);
+        }
+    }
 
 }
