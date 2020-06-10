@@ -7,6 +7,7 @@ import com.hewei.pujh.blog.entity.BlogArticle;
 import com.hewei.pujh.blog.vo.BlogArticleVo;
 import org.apache.ibatis.annotations.ResultType;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import org.springframework.data.repository.query.Param;
 
 /**
@@ -23,7 +24,7 @@ public interface BlogArticleMapper extends BaseMapper<BlogArticle> {
     @Select({
             "<script> ",
             "select ba.id,ba.create_time,ba.title,ba.bool_markdown,ba.bool_publish,ba.content,",
-            "ba.html_content,ba.description,ba.label_id,ba.user_id,ba.count_view,ba.count_comment,",
+            "ba.html_content,ba.uploadArticleUrl,ba.label_id,ba.user_id,ba.count_view,ba.count_comment,",
             "bl.`name` as labelName,su.username as userName",
             "from blog_article ba",
             "LEFT JOIN blog_label bl on ba.label_id = bl.id",
@@ -37,7 +38,7 @@ public interface BlogArticleMapper extends BaseMapper<BlogArticle> {
 
     @Select({
             "select ba.id,ba.create_time,ba.title,ba.bool_markdown,ba.bool_publish,ba.content,",
-            "ba.html_content,ba.description,ba.label_id,ba.user_id,ba.count_view,ba.count_comment,",
+            "ba.html_content,ba.uploadArticleUrl,ba.label_id,ba.user_id,ba.count_view,ba.count_comment,",
             "bl.name as labelName,su.username as userName",
             "from blog_article ba",
             "LEFT JOIN blog_label bl on ba.label_id = bl.id",
@@ -46,4 +47,9 @@ public interface BlogArticleMapper extends BaseMapper<BlogArticle> {
     })
     @ResultType(BlogArticleVo.class)
     BlogArticleVo getBlogArticleById(Long articleId);
+
+    @Update({
+            "update blog_article set label_id = null where label_id = #{labelId} and user_id = #{userId}"
+    })
+    void deleteUserBlogLabelByLabelId(@Param("labelId") Long labelId, @Param("userId") Long userId);
 }

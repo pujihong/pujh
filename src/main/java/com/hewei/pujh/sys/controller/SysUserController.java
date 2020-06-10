@@ -28,7 +28,7 @@ import java.util.Map;
  * @since 2020-01-15
  */
 @RestController
-@Api(tags = "用户相关接口")
+    @Api(tags = "用户相关接口")
 @RequestMapping("/sys/user")
 public class SysUserController {
     @Autowired

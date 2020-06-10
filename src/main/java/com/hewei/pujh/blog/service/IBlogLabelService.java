@@ -1,5 +1,6 @@
 package com.hewei.pujh.blog.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.hewei.pujh.blog.entity.BlogLabel;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.hewei.pujh.blog.vo.BlogLabelVo;
@@ -16,5 +17,11 @@ import java.util.List;
  */
 public interface IBlogLabelService extends IService<BlogLabel> {
 
-    List<BlogLabelVo> getUserBlogLabelList(Long userId);
+    List<BlogLabelVo> getUserAllBlogLabelList(Long userId);
+
+    IPage<BlogLabelVo> getUserBlogLabelList(Integer pageNum, Integer pageSize, String name, Long userId);
+
+    boolean saveBlogLabel(Long labelId, String name, Long userId);
+
+    boolean deleteBlogLabelById(Long labelId,Long userId);
 }

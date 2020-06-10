@@ -35,9 +35,9 @@ public class BlogArticleVo {
     private String htmlContent;
 
     /**
-     * 文章简介
+     * 上传的文章地址
      */
-    private String description;
+    private String uploadArticleUrl;
 
     /**
      * 标签id

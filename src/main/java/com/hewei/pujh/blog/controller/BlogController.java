@@ -29,18 +29,56 @@ import springfox.documentation.annotations.ApiIgnore;
 @Api(tags = "博客")
 public class BlogController {
     @Autowired
-    private IBlogLabelService getUserBlogLabel;
+    private IBlogLabelService labelService;
     @Autowired
     private IBlogArticleService articleService;
 
-    @PostMapping(path = "/getUserBlogLabelList")
+    @PostMapping(path = "/getUserAllBlogLabelList")
     @ApiOperation(value = "查询用户博客标签列表")
-    public ResultModel getUserBlogLabelList(@ApiIgnore @CurrentUser UserVo user) {
-        return ResultModel.success(getUserBlogLabel.getUserBlogLabelList(user.getId()));
+    public ResultModel getUserAllBlogLabelList(@ApiIgnore @CurrentUser UserVo user) {
+        return ResultModel.success(labelService.getUserAllBlogLabelList(user.getId()));
+    }
+
+    @PostMapping(path = "/getUserBlogLabelList")
+    @ApiOperation(value = "分页查询用户标签列表")
+    public ResultModel getUserBlogLabelList(@ApiIgnore @CurrentUser UserVo user,
+                                            @RequestParam(required = false) String name,
+                                            @RequestParam(required = false, defaultValue = "1") Integer pageNum,
+                                            @RequestParam(required = false, defaultValue = "10") Integer pageSize) {
+        return ResultModel.success(labelService.getUserBlogLabelList(pageNum, pageSize, name, user.getId()));
+    }
+
+    @PostMapping(path = "/saveBlogLabel")
+    @ApiOperation(value = "保存标签",notes = "labelId有值更新，没值新增")
+    public ResultModel saveBlogLabel(@ApiIgnore @CurrentUser UserVo user,
+                                     @RequestParam(required = false) Long labelId,
+                                     @RequestParam String name) {
+        if (StringUtils.isAnyBlank(name)) {
+            return ResultModel.error(ResultModel.WRONG_PARAMS_ERROR);
+        }
+        boolean result = labelService.saveBlogLabel(labelId, name, user.getId());
+        if (result) {
+            return ResultModel.success();
+        } else {
+            return ResultModel.error(ResultModel.OP_FAILED_ERROR);
+        }
+    }
+
+    @PostMapping(path = "/deleteBlogLabelById")
+    @ApiOperation(value = "删除标签",notes = "使用该标签的文章会移到根目录")
+    public ResultModel deleteBlogLabelById(@ApiIgnore @CurrentUser UserVo user,
+                                           @RequestParam Long labelId) {
+        // 先查询标签下有没有文章
+        boolean result = labelService.deleteBlogLabelById(labelId, user.getId());
+        if (result) {
+            return ResultModel.success();
+        } else {
+            return ResultModel.error(ResultModel.OP_FAILED_ERROR);
+        }
     }
 
     @PostMapping(path = "/getUserBlogArticleList")
-    @ApiOperation(value = "查询用户博客列表")
+    @ApiOperation(value = "分页查询用户博客列表")
     public ResultModel getUserBlogArticleList(@ApiIgnore @CurrentUser UserVo user,
                                               @RequestParam(required = false) Integer boolPublish,
                                               @RequestParam(required = false, defaultValue = "1") Integer pageNum,
@@ -51,10 +89,11 @@ public class BlogController {
         return ResultModel.success(articleService.getUserBlogArticleList(pageNum, pageSize, boolPublish, user.getId()));
     }
 
+
     @PostMapping(path = "/saveBlogArticle")
-    @ApiOperation(value = "保存博客")
+    @ApiOperation(value = "保存博客",notes = "articleId有值更新，没值新增")
     public ResultModel saveBlogArticle(@ApiIgnore @CurrentUser UserVo user,
-                                       @RequestParam Long articleId,
+                                       @RequestParam(required = false) Long articleId,
                                        @RequestParam String title,
                                        @RequestParam(required = false) Long labelId,
                                        @RequestParam String content,

@@ -54,9 +54,4 @@ public class BlogLabel implements Serializable {
      */
     private String name;
 
-    /**
-     * 排序
-     */
-    private Integer sort;
-
 }
