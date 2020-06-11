@@ -34,6 +34,17 @@ public interface BlogArticleMapper extends BaseMapper<BlogArticle> {
             "where ba.deleted = 0 and ba.user_id = #{userId}",
             "<if test='boolPublish != null'> and ba.bool_publish = #{boolPublish}</if>",
             "<if test='title != null and title != &apos;&apos;'> and ba.title like concat('%', #{title}, '%')</if>",
+            "<if test='labelIds != null and labelIds.size > 0'> and ba.label_id in",
+            "<foreach  collection = 'labelIds' item = 'id' index = 'index' open = '(' separator= ',' close = ')' >",
+            "#{id}",
+            "</foreach>",
+            "</if>",
+            "<if test='startDate !=null and startDate !=&apos;&apos;'>",
+            "  and date_format(ba.create_time,'%Y-%m-%d') &gt;= date_format(#{startDate},'%Y-%m-%d')",
+            "</if>",
+            "<if test='endDate !=null and endDate != &apos;&apos;'>",
+            "  and date_format(ba.create_time,'%Y-%m-%d') &lt;= date_format(#{endDate},'%Y-%m-%d')",
+            "</if>",
             "order by ba.create_time desc",
             "</script> "
     })
