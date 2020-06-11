@@ -7,9 +7,11 @@ import com.hewei.pujh.blog.entity.BlogArticle;
 import com.hewei.pujh.blog.mapper.BlogArticleMapper;
 import com.hewei.pujh.blog.service.IBlogArticleService;
 import com.hewei.pujh.blog.vo.BlogArticleVo;
+import com.hewei.pujh.enums.BoolEnum;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * <p>
@@ -43,8 +45,8 @@ public class BlogArticleServiceImpl extends ServiceImpl<BlogArticleMapper, BlogA
     }
 
     @Override
-    public IPage<BlogArticleVo> getUserBlogArticleList(Integer pageNum, Integer pageSize, Integer boolPublish, Long userId) {
-        return articleMapper.getUserBlogArticleList(new Page<>(pageNum, pageSize), boolPublish, userId);
+    public IPage<BlogArticleVo> getUserBlogArticleList(Integer pageNum, Integer pageSize, Integer boolPublish, String title, List<Long> labelIds, String startDate, String endDate, Long userId) {
+        return articleMapper.getUserBlogArticleList(new Page<>(pageNum, pageSize), boolPublish, title, labelIds, startDate, endDate, userId);
     }
 
     @Override
@@ -58,5 +60,13 @@ public class BlogArticleServiceImpl extends ServiceImpl<BlogArticleMapper, BlogA
         article.setId(articleId);
         article.setDeleted(1);
         return articleMapper.updateById(article) == 1;
+    }
+
+    @Override
+    public void saveBlogArticlePublishById(Long articleId) {
+        BlogArticle article = new BlogArticle();
+        article.setId(articleId);
+        article.setBoolPublish(BoolEnum.YES.getValue());
+        articleMapper.updateById(article);
     }
 }

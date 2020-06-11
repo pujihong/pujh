@@ -9,12 +9,16 @@ import com.hewei.pujh.sys.vo.UserVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
+
+import java.util.List;
 
 /**
  * <p>
@@ -28,6 +32,7 @@ import springfox.documentation.annotations.ApiIgnore;
 @RequestMapping("/blog")
 @Api(tags = "博客")
 public class BlogController {
+    private static final Logger logger = LoggerFactory.getLogger(BlogController.class);
     @Autowired
     private IBlogLabelService labelService;
     @Autowired
@@ -49,7 +54,7 @@ public class BlogController {
     }
 
     @PostMapping(path = "/saveBlogLabel")
-    @ApiOperation(value = "保存标签",notes = "labelId有值更新，没值新增")
+    @ApiOperation(value = "保存标签", notes = "labelId有值更新，没值新增")
     public ResultModel saveBlogLabel(@ApiIgnore @CurrentUser UserVo user,
                                      @RequestParam(required = false) Long labelId,
                                      @RequestParam String name) {
@@ -65,7 +70,7 @@ public class BlogController {
     }
 
     @PostMapping(path = "/deleteBlogLabelById")
-    @ApiOperation(value = "删除标签",notes = "使用该标签的文章会移到根目录")
+    @ApiOperation(value = "删除标签", notes = "使用该标签的文章会移到根目录")
     public ResultModel deleteBlogLabelById(@ApiIgnore @CurrentUser UserVo user,
                                            @RequestParam Long labelId) {
         // 先查询标签下有没有文章
@@ -82,16 +87,20 @@ public class BlogController {
     public ResultModel getUserBlogArticleList(@ApiIgnore @CurrentUser UserVo user,
                                               @RequestParam(required = false) Integer boolPublish,
                                               @RequestParam(required = false, defaultValue = "1") Integer pageNum,
-                                              @RequestParam(required = false, defaultValue = "10") Integer pageSize) {
+                                              @RequestParam(required = false, defaultValue = "10") Integer pageSize,
+                                              @RequestParam(required = false) String title,
+                                              @RequestParam(required = false) List<Long> labelIds,
+                                              @RequestParam(required = false) String startDate,
+                                              @RequestParam(required = false) String endDate) {
         if (boolPublish != null && BoolEnum.toEnum(boolPublish) == null) {
             return ResultModel.error(ResultModel.WRONG_PARAMS_ERROR);
         }
-        return ResultModel.success(articleService.getUserBlogArticleList(pageNum, pageSize, boolPublish, user.getId()));
+        return ResultModel.success(articleService.getUserBlogArticleList(pageNum, pageSize, boolPublish, title, labelIds, startDate, endDate, user.getId()));
     }
 
 
     @PostMapping(path = "/saveBlogArticle")
-    @ApiOperation(value = "保存博客",notes = "articleId有值更新，没值新增")
+    @ApiOperation(value = "保存博客", notes = "articleId有值更新，没值新增")
     public ResultModel saveBlogArticle(@ApiIgnore @CurrentUser UserVo user,
                                        @RequestParam(required = false) Long articleId,
                                        @RequestParam String title,
@@ -112,6 +121,19 @@ public class BlogController {
         } else {
             return ResultModel.error(ResultModel.OP_FAILED_ERROR);
         }
+    }
+
+    @PostMapping(path = "/saveBlogArticlePublishById")
+    @ApiOperation(value = "发布博客信息")
+    public ResultModel saveBlogArticlePublishById(@RequestParam Long articleId) {
+        try {
+            articleService.saveBlogArticlePublishById(articleId);
+            return ResultModel.success();
+        } catch (Exception e) {
+            logger.error("发布博客信息失败", e);
+            return ResultModel.error(ResultModel.OP_FAILED_ERROR);
+        }
+
     }
 
     @PostMapping(path = "/getBlogArticleById")
