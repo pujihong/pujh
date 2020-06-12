@@ -46,7 +46,11 @@ public class BlogArticleServiceImpl extends ServiceImpl<BlogArticleMapper, BlogA
 
     @Override
     public IPage<BlogArticleVo> getUserBlogArticleList(Integer pageNum, Integer pageSize, Integer boolPublish, String title, List<Long> labelIds, String startDate, String endDate, Long userId) {
-        return articleMapper.getUserBlogArticleList(new Page<>(pageNum, pageSize), boolPublish, title, labelIds, startDate, endDate, userId);
+        boolean containNoLabel = false;
+        if(labelIds != null && labelIds.size() > 0) {
+            containNoLabel = labelIds.contains(-1L);
+        }
+        return articleMapper.getUserBlogArticleList(new Page<>(pageNum, pageSize), boolPublish, title, labelIds, startDate, endDate, containNoLabel, userId);
     }
 
     @Override
