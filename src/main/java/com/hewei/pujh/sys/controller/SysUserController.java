@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -28,7 +29,7 @@ import java.util.Map;
  * @since 2020-01-15
  */
 @RestController
-    @Api(tags = "用户相关接口")
+@Api(tags = "用户相关接口")
 @RequestMapping("/sys/user")
 public class SysUserController {
     @Autowired
@@ -45,8 +46,8 @@ public class SysUserController {
      */
     @ApiOperation(value = "登录")
     @ApiImplicitParams({
-            @ApiImplicitParam(name="username",value="加密后的用户名",required=true),
-            @ApiImplicitParam(name="password",value="加密后的用户密码",required=true),
+            @ApiImplicitParam(name = "username", value = "加密后的用户名", required = true),
+            @ApiImplicitParam(name = "password", value = "加密后的用户密码", required = true),
     })
     @PostMapping(value = "/login")
     @SecretAnnotation(decode = true)
@@ -76,6 +77,15 @@ public class SysUserController {
     public ResultModel logout(HttpServletRequest request) {
         redisService.deleteToken(request.getHeader(Constant.AUTHORIZATION));
         return ResultModel.success();
+    }
+
+    @PostMapping(path = "/getUserList")
+    @ApiOperation(value = "分页查询用户列表", notes = "角色支持多选")
+    public ResultModel getUserList(@RequestParam(required = false) String name,
+                                   @RequestParam(required = false) List<Long> roleIds,
+                                   @RequestParam(required = false, defaultValue = "1") Integer pageNum,
+                                   @RequestParam(required = false, defaultValue = "10") Integer pageSize) {
+        return ResultModel.success(userService.getUserList(pageNum, pageSize, name, roleIds));
     }
 
 }

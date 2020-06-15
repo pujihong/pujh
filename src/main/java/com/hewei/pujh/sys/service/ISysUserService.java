@@ -1,8 +1,11 @@
 package com.hewei.pujh.sys.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.hewei.pujh.sys.entity.SysUser;
 import com.hewei.pujh.sys.vo.UserVo;
+
+import java.util.List;
 
 /**
  * <p>
@@ -29,4 +32,6 @@ public interface ISysUserService extends IService<SysUser> {
      * @return UserVo
      */
     UserVo getUserVoById(Long currentUserId);
+
+    IPage<UserVo> getUserList(Integer pageNum, Integer pageSize, String name, List<Long> roleIds);
 }

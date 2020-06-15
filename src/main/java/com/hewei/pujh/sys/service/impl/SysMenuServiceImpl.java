@@ -1,9 +1,13 @@
 package com.hewei.pujh.sys.service.impl;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hewei.pujh.sys.entity.SysMenu;
 import com.hewei.pujh.sys.mapper.SysMenuMapper;
 import com.hewei.pujh.sys.service.ISysMenuService;
+import com.hewei.pujh.sys.vo.LevelVo;
+import com.hewei.pujh.sys.vo.MenuListVo;
 import com.hewei.pujh.sys.vo.MenuVo;
 import org.springframework.stereotype.Service;
 
@@ -24,20 +28,22 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
 
     @Resource
     private SysMenuMapper menuMapper;
+
     @Override
     public List<MenuVo> getUserMenu(Long userId) {
         List<MenuVo> menuList = new ArrayList<>();
-        if(userId == 0) {
+        if (userId == 0) {
             menuList = menuMapper.getAllNavMenu();
+        } else {
+            menuList = menuMapper.getUserMenu(userId);
         }
-        menuList = menuMapper.getUserMenu(userId);
-        if(menuList == null || menuList.size() == 0) {
-            return  null;
+        if (menuList == null || menuList.size() == 0) {
+            return null;
         }
         // 构建children
         List<MenuVo> menuVoList = new ArrayList<>();
         // 先找到所有的一级菜单
-        for (MenuVo menu: menuList) {
+        for (MenuVo menu : menuList) {
             // 一级菜单没有parentId
             if (menu.getParentId() == null || menu.getParentId() == 0) {
                 menuVoList.add(menu);
@@ -48,6 +54,25 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
             menu.setChildren(getChild(menu.getId(), menuList));
         }
         return menuVoList;
+    }
+
+    @Override
+    public List<LevelVo> getMenuLevelList() {
+        return menuMapper.getMenuLevelList();
+    }
+
+    @Override
+    public IPage<MenuListVo> getMenuList(Integer pageNum, Integer pageSize, String name, Integer level, Integer status) {
+        return menuMapper.getMenuList(new Page<>(pageNum, pageSize), name, level, status);
+    }
+
+    @Override
+    public boolean saveMenu(Long menuId, String name, Long userId) {
+        SysMenu menu = new SysMenu();
+        menu.setUpdateUser(userId);
+        menu.setName(name);
+        menu.setId(menuId);
+        return menuMapper.updateById(menu) == 1;
     }
 
     private List<MenuVo> getChild(Long menuId, List<MenuVo> rootMenu) {

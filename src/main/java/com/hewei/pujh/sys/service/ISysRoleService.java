@@ -1,7 +1,11 @@
 package com.hewei.pujh.sys.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.hewei.pujh.sys.entity.SysRole;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.hewei.pujh.sys.vo.RoleVo;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +17,9 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ISysRoleService extends IService<SysRole> {
 
+    List<RoleVo> getAllRoleList();
+
+    IPage<RoleVo> getRoleList(Integer pageNum, Integer pageSize, String name, Integer status);
+
+    boolean saveRole(Long roleId, String name, String code, Long userId);
 }

@@ -1,7 +1,14 @@
 package com.hewei.pujh.sys.mapper;
 
-import com.hewei.pujh.sys.entity.SysRole;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.hewei.pujh.sys.entity.SysRole;
+import com.hewei.pujh.sys.vo.RoleVo;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +20,21 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface SysRoleMapper extends BaseMapper<SysRole> {
 
+    @Select({
+            "select id,name,status,code from sys_role where deleted = 0 and status = 0"
+    })
+    List<RoleVo> getAllRoleList();
+
+
+
+    @Select({
+            "<script> ",
+            "select id,`name`,`status`,`code` from sys_role",
+            "where deleted = 0",
+            "<if test='name != null and name != &apos;&apos;'> and name like concat('%', #{name}, '%')</if>",
+            "<if test='status != null'> and status = #{status}</if>",
+            "ORDER BY create_time desc",
+            "</script> "
+    })
+    IPage<RoleVo> getRoleList(@Param("objectPage") Page<Object> objectPage, @Param("name") String name, @Param("status") Integer status);
 }

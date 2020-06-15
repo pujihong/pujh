@@ -8,10 +8,7 @@ import com.hewei.pujh.sys.vo.UserVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 /**
@@ -34,5 +31,34 @@ public class SysMenuController {
     @ApiOperation(value = "查询用户的菜单")
     public ResultModel getUserNavMenu(@ApiIgnore @CurrentUser UserVo user) {
         return ResultModel.success(menuService.getUserMenu(user.getId()));
+    }
+
+    @GetMapping(path = "/getMenuLevelList")
+    @ApiOperation(value = "查询菜单的级别列表", notes = "最大支持到四级")
+    public ResultModel getMenuLevelList() {
+        return ResultModel.success(menuService.getMenuLevelList());
+    }
+
+    @PostMapping(path = "/getMenuList")
+    @ApiOperation(value = "分页查询菜单信息列表", notes = "level 0一级菜单 1二级菜单,菜单最多4层")
+    public ResultModel getMenuList(@RequestParam(required = false) String name,
+                                   @RequestParam(required = false) Integer level,
+                                   @RequestParam(required = false) Integer status,
+                                   @RequestParam(required = false, defaultValue = "1") Integer pageNum,
+                                   @RequestParam(required = false, defaultValue = "10") Integer pageSize) {
+        return ResultModel.success(menuService.getMenuList(pageNum, pageSize, name, level, status));
+    }
+
+    @PostMapping(path = "/saveMenu")
+    @ApiOperation(value = "保存菜单", notes = "只提供编辑菜单名称")
+    public ResultModel saveMenu(@ApiIgnore @CurrentUser UserVo user,
+                                @RequestParam Long menuId,
+                                @RequestParam(required = false) String name) {
+        boolean result = menuService.saveMenu(menuId, name, user.getId());
+        if (result) {
+            return ResultModel.success();
+        } else {
+            return ResultModel.error(ResultModel.OP_FAILED_ERROR);
+        }
     }
 }
