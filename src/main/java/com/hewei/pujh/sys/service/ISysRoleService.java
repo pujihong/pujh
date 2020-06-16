@@ -22,4 +22,6 @@ public interface ISysRoleService extends IService<SysRole> {
     IPage<RoleVo> getRoleList(Integer pageNum, Integer pageSize, String name, Integer status);
 
     boolean saveRole(Long roleId, String name, String code, Long userId);
+
+    boolean saveRoleMenu(List<Long> menuIds, Long roleId, Long userId);
 }

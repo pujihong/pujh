@@ -25,7 +25,7 @@ public interface ISysMenuService extends IService<SysMenu> {
      * @param userId 用户id
      * @return List<MenuVo>
      */
-    List<MenuVo> getUserMenu(Long userId);
+    List<MenuVo> getUserMenuList(Long userId);
 
     /**
      * 查询菜单有几个级别
@@ -37,4 +37,8 @@ public interface ISysMenuService extends IService<SysMenu> {
     IPage<MenuListVo> getMenuList(Integer pageNum, Integer pageSize, String name, Integer level, Integer status);
 
     boolean saveMenu(Long menuId, String name, Long userId);
+
+    List<MenuVo> getRoleMenuList(Long roleId);
+
+    List<MenuVo> getAllMenuList();
 }

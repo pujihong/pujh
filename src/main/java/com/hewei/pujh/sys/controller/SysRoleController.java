@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
+import java.util.List;
+
 /**
  * <p>
  * 角色表 前端控制器
@@ -52,6 +54,19 @@ public class SysRoleController {
             return ResultModel.error(ResultModel.WRONG_PARAMS_ERROR);
         }
         boolean result = roleService.saveRole(roleId, name, code, user.getId());
+        if (result) {
+            return ResultModel.success();
+        } else {
+            return ResultModel.error(ResultModel.OP_FAILED_ERROR);
+        }
+    }
+
+    @PostMapping(path = "/saveRoleMenu")
+    @ApiOperation(value = "保存角色授权", notes = "roleId有值更新，没值新增")
+    public ResultModel saveRoleMenu(@ApiIgnore @CurrentUser UserVo user,
+                                    @RequestParam Long roleId,
+                                    @RequestParam List<Long> menuIds) {
+        boolean result = roleService.saveRoleMenu(menuIds, roleId, user.getId());
         if (result) {
             return ResultModel.success();
         } else {

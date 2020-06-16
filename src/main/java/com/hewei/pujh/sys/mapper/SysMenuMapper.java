@@ -40,7 +40,15 @@ public interface SysMenuMapper extends BaseMapper<SysMenu> {
             "order by m.level,m.sort"
     })
     @ResultType(MenuVo.class)
-    List<MenuVo> getUserMenu(Long userId);
+    List<MenuVo> getUserMenuList(Long userId);
+
+    @Select({
+            "select m.id,m.parent_id as parentId,m.`name`,m.url,m.icon from sys_menu m",
+            "LEFT JOIN sys_role_menu rm on m.id = rm.menu_id",
+            "where m.deleted = 0 and m.type = 0 and m.`status` = 0 and rm.deleted = 0 and rm.role_id = #{roleId}",
+            "order by m.level,m.sort"
+    })
+    List<MenuVo> getRoleMenuList(Long roleId);
 
     /**
      * 查询所有可用的nav菜单
@@ -85,4 +93,5 @@ public interface SysMenuMapper extends BaseMapper<SysMenu> {
             "</script> "
     })
     IPage<MenuListVo> getMenuList(@Param("objectPage") Page<Object> objectPage, @Param("name") String name, @Param("level") Integer level, @Param("status") Integer status);
+
 }

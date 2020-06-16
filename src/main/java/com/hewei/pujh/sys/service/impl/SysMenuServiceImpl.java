@@ -30,30 +30,25 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
     private SysMenuMapper menuMapper;
 
     @Override
-    public List<MenuVo> getUserMenu(Long userId) {
+    public List<MenuVo> getUserMenuList(Long userId) {
         List<MenuVo> menuList = new ArrayList<>();
         if (userId == 0) {
             menuList = menuMapper.getAllNavMenu();
         } else {
-            menuList = menuMapper.getUserMenu(userId);
+            menuList = menuMapper.getUserMenuList(userId);
         }
-        if (menuList == null || menuList.size() == 0) {
-            return null;
-        }
-        // 构建children
-        List<MenuVo> menuVoList = new ArrayList<>();
-        // 先找到所有的一级菜单
-        for (MenuVo menu : menuList) {
-            // 一级菜单没有parentId
-            if (menu.getParentId() == null || menu.getParentId() == 0) {
-                menuVoList.add(menu);
-            }
-        }
-        // 为一级菜单设置子菜单，getChild是递归调用的
-        for (MenuVo menu : menuVoList) {
-            menu.setChildren(getChild(menu.getId(), menuList));
-        }
-        return menuVoList;
+        return getTreeMenuList(menuList);
+    }
+
+    @Override
+    public List<MenuVo> getRoleMenuList(Long roleId) {
+        return menuMapper.getRoleMenuList(roleId);
+    }
+
+    @Override
+    public List<MenuVo> getAllMenuList() {
+        List<MenuVo> menuList = menuMapper.getAllNavMenu();
+        return getTreeMenuList(menuList);
     }
 
     @Override
@@ -74,6 +69,28 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
         menu.setId(menuId);
         return menuMapper.updateById(menu) == 1;
     }
+
+    private List<MenuVo> getTreeMenuList(List<MenuVo> menuList) {
+        if (menuList == null || menuList.size() == 0) {
+            return null;
+        }
+        // 构建children
+        List<MenuVo> menuVoList = new ArrayList<>();
+        // 先找到所有的一级菜单
+        for (MenuVo menu : menuList) {
+            // 一级菜单没有parentId
+            if (menu.getParentId() == null || menu.getParentId() == 0) {
+                menuVoList.add(menu);
+            }
+        }
+        // 为一级菜单设置子菜单，getChild是递归调用的
+        for (MenuVo menu : menuVoList) {
+            menu.setChildren(getChild(menu.getId(), menuList));
+        }
+        return menuVoList;
+    }
+
+    ;
 
     private List<MenuVo> getChild(Long menuId, List<MenuVo> rootMenu) {
         // 子菜单

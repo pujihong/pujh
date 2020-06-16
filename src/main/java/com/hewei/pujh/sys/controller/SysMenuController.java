@@ -27,10 +27,22 @@ public class SysMenuController {
     @Autowired
     private ISysMenuService menuService;
 
-    @PostMapping(path = "/getUserMenu")
-    @ApiOperation(value = "查询用户的菜单")
+    @PostMapping(path = "/getUserMenuList")
+    @ApiOperation(value = "查询用户的菜单",notes = "树形结构")
     public ResultModel getUserNavMenu(@ApiIgnore @CurrentUser UserVo user) {
-        return ResultModel.success(menuService.getUserMenu(user.getId()));
+        return ResultModel.success(menuService.getUserMenuList(user.getId()));
+    }
+
+    @GetMapping(path = "/getAllMenuList")
+    @ApiOperation(value = "查询系统全部菜单",notes = "树形结构")
+    public ResultModel getAllMenuList() {
+        return ResultModel.success(menuService.getAllMenuList());
+    }
+
+    @PostMapping(path = "/getRoleMenuList")
+    @ApiOperation(value = "查询角色的菜单")
+    public ResultModel getRoleMenuList(@RequestParam Long roleId) {
+        return ResultModel.success(menuService.getRoleMenuList(roleId));
     }
 
     @GetMapping(path = "/getMenuLevelList")
