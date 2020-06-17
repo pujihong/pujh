@@ -5,8 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.hewei.pujh.sys.entity.SysUser;
 import com.hewei.pujh.sys.vo.UserVo;
-import org.apache.ibatis.annotations.ResultType;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
@@ -28,17 +27,16 @@ public interface SysUserMapper extends BaseMapper<SysUser> {
     UserVo getUserVoById(Long userId);
 
     @Select({
-            "select id,create_time,update_time,username,`password` from sys_user where deleted = 0"
+            "select id,create_time,update_time,username,`password` from sys_user where deleted = 0",
+            "and username = #{username} limit 1"
     })
     @ResultType(SysUser.class)
     SysUser getUserByUsername(String username);
 
     @Select({
             "<script> ",
-            "select u.id,u.username,ur.role_id,r.`name` as roleName",
+            "select u.id,u.username",
             "from sys_user u",
-            "LEFT JOIN sys_user_role ur on u.id = ur.user_id",
-            "LEFT JOIN sys_role r on ur.role_id = r.id",
             "where u.deleted = 0 and u.id != 0 ",
             "<if test='name != null and name != &apos;&apos;'> and u.username like concat('%', #{name}, '%')</if>",
             "<if test='roleIds != null and roleIds.size > 0'>and ur.role_id in",
@@ -48,6 +46,15 @@ public interface SysUserMapper extends BaseMapper<SysUser> {
             "</if>",
             "order by u.create_time desc",
             "</script> "
+    })
+    @Results({
+            @Result(column = "id", property = "id"),
+            @Result(column = "username", property = "username"),
+            @Result(column = "id", property = "roleList",
+                    many = @Many(
+                            select = "com.hewei.pujh.sys.mapper.SysRoleMapper.getRoleListByUserId"
+                    )
+            )
     })
     IPage<UserVo> getUserList(@Param("objectPage") Page<Object> objectPage, @Param("name") String name, @Param("roleIds") List<Long> roleIds);
 }

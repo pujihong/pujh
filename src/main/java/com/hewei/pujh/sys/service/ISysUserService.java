@@ -34,4 +34,8 @@ public interface ISysUserService extends IService<SysUser> {
     UserVo getUserVoById(Long currentUserId);
 
     IPage<UserVo> getUserList(Integer pageNum, Integer pageSize, String name, List<Long> roleIds);
+
+    boolean saveUser(Long userId, String name, List<Long> roleIds, Long currentUserId);
+
+    boolean deleteUserById(Long userId, Long currentUserId);
 }

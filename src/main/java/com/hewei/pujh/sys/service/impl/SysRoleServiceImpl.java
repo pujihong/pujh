@@ -95,10 +95,12 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
             }
         }
         try {
-          /*  roleMenuMapper.deleteBatchRoleMenu(removeArr, roleId, userId);
+            if(removeArr.size() > 0) {
+                roleMenuMapper.deleteBatchRoleMenu(removeArr, roleId, userId);
+            }
             if (addRoleMenuList.size() > 0) {
                 roleMenuMapper.batchInsert(addRoleMenuList);
-            }*/
+            }
             return true;
         } catch (Exception e) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();

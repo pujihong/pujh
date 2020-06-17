@@ -26,7 +26,6 @@ public interface SysRoleMapper extends BaseMapper<SysRole> {
     List<RoleVo> getAllRoleList();
 
 
-
     @Select({
             "<script> ",
             "select id,`name`,`status`,`code` from sys_role",
@@ -37,4 +36,11 @@ public interface SysRoleMapper extends BaseMapper<SysRole> {
             "</script> "
     })
     IPage<RoleVo> getRoleList(@Param("objectPage") Page<Object> objectPage, @Param("name") String name, @Param("status") Integer status);
+
+    @Select({
+            "select r.id,r.name,r.status,r.code from sys_role r",
+            "RIGHT JOIN sys_user_role ur on r.id = ur.role_id",
+            "where r.deleted = 0 and r.status = 0 and ur.deleted = 0 and ur.user_id = #{userId}"
+    })
+    List<RoleVo> getRoleListByUserId(Long userId);
 }

@@ -40,9 +40,28 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
         return getTreeMenuList(menuList);
     }
 
+    // 这里返回的不是树形结果，只是把父节点的子节点set进去 原因 element-ui el-tree 在setCheckedKeys会把所有子节点都选中
     @Override
     public List<MenuVo> getRoleMenuList(Long roleId) {
-        return menuMapper.getRoleMenuList(roleId);
+        List<MenuVo> menuList = menuMapper.getRoleMenuList(roleId);
+        if (menuList == null || menuList.size() == 0) {
+            return null;
+        }
+        // 构建children
+        List<MenuVo> menuVoList = new ArrayList<>();
+        // 先找到所有的一级菜单
+        for (MenuVo menu : menuList) {
+            // 一级菜单没有parentId
+            if (menu.getParentId() == null || menu.getParentId() == 0) {
+                menuVoList.add(menu);
+            }
+        }
+        // 为一级菜单设置子菜单，getChild是递归调用的
+        for (MenuVo menu : menuVoList) {
+            menu.setChildren(getChild(menu.getId(), menuList));
+        }
+        // 注意这里返回menuList，而不是menuVoList
+        return menuList;
     }
 
     @Override

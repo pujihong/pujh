@@ -22,18 +22,20 @@ public interface SysRoleMenuMapper extends BaseMapper<SysRoleMenu> {
     @Insert({
             "<script> ",
             "INSERT INTO sys_role_menu(create_user, role_id,menu_id) values",
-            "<foreach  collection = 'addRoleMenuList' item = 'item' open = '(' separator= ',' close = ')' >",
-            "#{item.createUser},#{item.roleId},#{menuId}",
+            "<foreach  collection = 'addRoleMenuList' item = 'item'  separator= ','  >",
+            "(#{item.createUser},#{item.roleId},#{item.menuId})",
             "</foreach>",
             "</script> "
     })
-    void batchInsert(List<SysRoleMenu> addRoleMenuList);
+    void batchInsert(@Param("addRoleMenuList") List<SysRoleMenu> addRoleMenuList);
 
     @Update({
-            "update sys_role_menu set deleted = 1 where role_id = #{roleId} and menu_id in",
+            "<script> ",
+            "update sys_role_menu set deleted = 1, update_user=#{userId} where deleted = 0 and role_id = #{roleId} and menu_id in",
             "<foreach  collection = 'removeArr' item = 'id' index = 'index' open = '(' separator= ',' close = ')' >",
             "#{id}",
             "</foreach>",
+            "</script> "
     })
     void deleteBatchRoleMenu(@Param("removeArr") List<Long> removeArr, @Param("roleId") Long roleId, @Param("userId") Long userId);
 }

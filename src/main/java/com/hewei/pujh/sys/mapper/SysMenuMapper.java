@@ -31,7 +31,7 @@ public interface SysMenuMapper extends BaseMapper<SysMenu> {
      * @return List<MenuVo>
      */
     @Select({
-            "select m.id,m.parent_id as parentId,m.`name`,m.url,m.icon from sys_menu m",
+            "select m.id,m.parent_id as parentId,m.`name`,m.url,m.icon,m.level from sys_menu m",
             "LEFT JOIN sys_role_menu rm on m.id = rm.menu_id",
             "LEFT JOIN sys_role r on rm.role_id = r.id",
             "LEFT JOIN sys_user_role ur on r.id = ur.role_id",
@@ -43,7 +43,7 @@ public interface SysMenuMapper extends BaseMapper<SysMenu> {
     List<MenuVo> getUserMenuList(Long userId);
 
     @Select({
-            "select m.id,m.parent_id as parentId,m.`name`,m.url,m.icon from sys_menu m",
+            "select m.id,m.parent_id as parentId,m.`name`,m.url,m.icon,m.level from sys_menu m",
             "LEFT JOIN sys_role_menu rm on m.id = rm.menu_id",
             "where m.deleted = 0 and m.type = 0 and m.`status` = 0 and rm.deleted = 0 and rm.role_id = #{roleId}",
             "order by m.level,m.sort"
@@ -56,7 +56,7 @@ public interface SysMenuMapper extends BaseMapper<SysMenu> {
      * @return List<MenuVo>
      */
     @Select({
-            "select id,parent_id as parentId,`name`,url,icon from sys_menu where deleted = 0 and type = 0 and status = 0",
+            "select id,parent_id as parentId,`name`,url,icon,level from sys_menu where deleted = 0 and type = 0 and status = 0",
             "order by sort"
     })
     @ResultType(MenuVo.class)

@@ -1,11 +1,13 @@
 package com.hewei.pujh.sys.controller;
 
+import com.hewei.pujh.annotation.CurrentUser;
 import com.hewei.pujh.annotation.SecretAnnotation;
 import com.hewei.pujh.base.Constant;
 import com.hewei.pujh.base.RedisService;
 import com.hewei.pujh.base.ResultModel;
 import com.hewei.pujh.sys.entity.SysUser;
 import com.hewei.pujh.sys.service.ISysUserService;
+import com.hewei.pujh.sys.vo.UserVo;
 import com.hewei.pujh.utils.PassWordUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -14,6 +16,7 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -86,6 +89,43 @@ public class SysUserController {
                                    @RequestParam(required = false, defaultValue = "1") Integer pageNum,
                                    @RequestParam(required = false, defaultValue = "10") Integer pageSize) {
         return ResultModel.success(userService.getUserList(pageNum, pageSize, name, roleIds));
+    }
+
+    @PostMapping(path = "/saveUser")
+    @ApiOperation(value = "保存用户", notes = "userId有值更新，没值新增, 用户 角色 一对多")
+    public ResultModel saveUser(@ApiIgnore @CurrentUser UserVo user,
+                                @RequestParam(required = false) Long userId,
+                                @RequestParam String name,
+                                @RequestParam List<Long> roleIds) {
+        SysUser sysUser = userService.getUserByUsername(name);
+        if (StringUtils.isAnyBlank(name) || roleIds == null || roleIds.size() == 0) {
+            return ResultModel.error(ResultModel.WRONG_PARAMS_ERROR);
+        }
+        // 新增
+        if(userId == null && sysUser != null) {
+            return ResultModel.error("用户名已存在");
+        }
+        if(sysUser != null && name.equals(sysUser.getUsername()) && !userId.equals(sysUser.getId())) {
+            return ResultModel.error("用户名已存在");
+        }
+        boolean result = userService.saveUser(userId, name, roleIds, user.getId());
+        if (result) {
+            return ResultModel.success();
+        } else {
+            return ResultModel.error(ResultModel.OP_FAILED_ERROR);
+        }
+    }
+
+    @PostMapping(path = "/deleteUserById")
+    @ApiOperation(value = "删除用户")
+    public ResultModel deleteUserById(@ApiIgnore @CurrentUser UserVo user,
+                                      @RequestParam Long userId) {
+        boolean result = userService.deleteUserById(userId, user.getId());
+        if (result) {
+            return ResultModel.success();
+        } else {
+            return ResultModel.error(ResultModel.OP_FAILED_ERROR);
+        }
     }
 
 }
