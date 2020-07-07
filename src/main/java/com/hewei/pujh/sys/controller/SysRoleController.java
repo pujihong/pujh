@@ -3,6 +3,7 @@ package com.hewei.pujh.sys.controller;
 
 import com.hewei.pujh.annotation.CurrentUser;
 import com.hewei.pujh.base.ResultModel;
+import com.hewei.pujh.enums.ErrorCodeEnum;
 import com.hewei.pujh.sys.service.ISysRoleService;
 import com.hewei.pujh.sys.vo.UserVo;
 import io.swagger.annotations.Api;
@@ -51,13 +52,13 @@ public class SysRoleController {
                                 @RequestParam String name,
                                 @RequestParam String code) {
         if (StringUtils.isAnyBlank(name, code)) {
-            return ResultModel.error(ResultModel.WRONG_PARAMS_ERROR);
+            return ResultModel.error(ErrorCodeEnum.WRONG_PARAMS_ERROR.getCode());
         }
         boolean result = roleService.saveRole(roleId, name, code, user.getId());
         if (result) {
             return ResultModel.success();
         } else {
-            return ResultModel.error(ResultModel.OP_FAILED_ERROR);
+            return ResultModel.error(ErrorCodeEnum.OP_FAILED_ERROR.getCode());
         }
     }
 
@@ -70,7 +71,7 @@ public class SysRoleController {
         if (result) {
             return ResultModel.success();
         } else {
-            return ResultModel.error(ResultModel.OP_FAILED_ERROR);
+            return ResultModel.error(ErrorCodeEnum.OP_FAILED_ERROR.getCode());
         }
     }
 }

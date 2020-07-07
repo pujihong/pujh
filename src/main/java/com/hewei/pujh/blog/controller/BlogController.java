@@ -5,6 +5,7 @@ import com.hewei.pujh.base.ResultModel;
 import com.hewei.pujh.blog.service.IBlogArticleService;
 import com.hewei.pujh.blog.service.IBlogLabelService;
 import com.hewei.pujh.enums.BoolEnum;
+import com.hewei.pujh.enums.ErrorCodeEnum;
 import com.hewei.pujh.sys.vo.UserVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -59,13 +60,13 @@ public class BlogController {
                                      @RequestParam(required = false) Long labelId,
                                      @RequestParam String name) {
         if (StringUtils.isAnyBlank(name)) {
-            return ResultModel.error(ResultModel.WRONG_PARAMS_ERROR);
+            return ResultModel.error(ErrorCodeEnum.WRONG_PARAMS_ERROR.getCode());
         }
         boolean result = labelService.saveBlogLabel(labelId, name, user.getId());
         if (result) {
             return ResultModel.success();
         } else {
-            return ResultModel.error(ResultModel.OP_FAILED_ERROR);
+            return ResultModel.error(ErrorCodeEnum.OP_FAILED_ERROR.getCode());
         }
     }
 
@@ -78,7 +79,7 @@ public class BlogController {
         if (result) {
             return ResultModel.success();
         } else {
-            return ResultModel.error(ResultModel.OP_FAILED_ERROR);
+            return ResultModel.error(ErrorCodeEnum.OP_FAILED_ERROR.getCode());
         }
     }
 
@@ -93,7 +94,7 @@ public class BlogController {
                                               @RequestParam(required = false) String startDate,
                                               @RequestParam(required = false) String endDate) {
         if (boolPublish != null && BoolEnum.toEnum(boolPublish) == null) {
-            return ResultModel.error(ResultModel.WRONG_PARAMS_ERROR);
+            return ResultModel.error(ErrorCodeEnum.WRONG_PARAMS_ERROR.getCode());
         }
         return ResultModel.success(articleService.getUserBlogArticleList(pageNum, pageSize, boolPublish, title, labelIds, startDate, endDate, user.getId()));
     }
@@ -110,16 +111,16 @@ public class BlogController {
                                        @RequestParam(required = false, defaultValue = "1") Integer boolMarkdown,
                                        @RequestParam(required = false, defaultValue = "0") Integer boolPublish) {
         if (StringUtils.isAnyBlank(title, content)) {
-            return ResultModel.error(ResultModel.WRONG_PARAMS_ERROR);
+            return ResultModel.error(ErrorCodeEnum.WRONG_PARAMS_ERROR.getCode());
         }
         if (boolMarkdown == 1 && StringUtils.isBlank(htmlContent)) {
-            return ResultModel.error(ResultModel.WRONG_PARAMS_ERROR);
+            return ResultModel.error(ErrorCodeEnum.WRONG_PARAMS_ERROR.getCode());
         }
         boolean result = articleService.saveBlogArticle(articleId, title, labelId, content, htmlContent, boolMarkdown, boolPublish, user.getId());
         if (result) {
             return ResultModel.success();
         } else {
-            return ResultModel.error(ResultModel.OP_FAILED_ERROR);
+            return ResultModel.error(ErrorCodeEnum.OP_FAILED_ERROR.getCode());
         }
     }
 
@@ -131,7 +132,7 @@ public class BlogController {
             return ResultModel.success();
         } catch (Exception e) {
             logger.error("发布博客信息失败", e);
-            return ResultModel.error(ResultModel.OP_FAILED_ERROR);
+            return ResultModel.error(ErrorCodeEnum.OP_FAILED_ERROR.getCode());
         }
 
     }
@@ -149,7 +150,7 @@ public class BlogController {
         if (result) {
             return ResultModel.success();
         } else {
-            return ResultModel.error(ResultModel.OP_FAILED_ERROR);
+            return ResultModel.error(ErrorCodeEnum.OP_FAILED_ERROR.getCode());
         }
     }
 

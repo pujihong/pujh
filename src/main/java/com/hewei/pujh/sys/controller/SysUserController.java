@@ -5,6 +5,7 @@ import com.hewei.pujh.annotation.SecretAnnotation;
 import com.hewei.pujh.base.Constant;
 import com.hewei.pujh.base.RedisService;
 import com.hewei.pujh.base.ResultModel;
+import com.hewei.pujh.enums.ErrorCodeEnum;
 import com.hewei.pujh.sys.entity.SysUser;
 import com.hewei.pujh.sys.service.ISysUserService;
 import com.hewei.pujh.sys.vo.UserVo;
@@ -58,10 +59,10 @@ public class SysUserController {
                              @RequestParam String password) {
         SysUser user = userService.getUserByUsername(username);
         if (user == null) {
-            return ResultModel.error(ResultModel.USER_NOT_EXIST_ERROR);
+            return ResultModel.error(ErrorCodeEnum.USER_NOT_EXIST_ERROR.getCode());
         }
         if (!PassWordUtil.encodePassword(user.getUsername(), password).equals(user.getPassword())) {
-            return ResultModel.error(ResultModel.USERNAME_OR_PASSWORD_ERROR);
+            return ResultModel.error(ErrorCodeEnum.USERNAME_OR_PASSWORD_ERROR.getCode());
         }
         // 不让用户多处登录
         String token = redisService.getTokenByUserId(user.getId());
@@ -99,20 +100,20 @@ public class SysUserController {
                                 @RequestParam List<Long> roleIds) {
         SysUser sysUser = userService.getUserByUsername(name);
         if (StringUtils.isAnyBlank(name) || roleIds == null || roleIds.size() == 0) {
-            return ResultModel.error(ResultModel.WRONG_PARAMS_ERROR);
+            return ResultModel.error(ErrorCodeEnum.WRONG_PARAMS_ERROR.getCode());
         }
         // 新增
-        if(userId == null && sysUser != null) {
+        if (userId == null && sysUser != null) {
             return ResultModel.error("用户名已存在");
         }
-        if(sysUser != null && name.equals(sysUser.getUsername()) && !userId.equals(sysUser.getId())) {
+        if (sysUser != null && name.equals(sysUser.getUsername()) && !userId.equals(sysUser.getId())) {
             return ResultModel.error("用户名已存在");
         }
         boolean result = userService.saveUser(userId, name, roleIds, user.getId());
         if (result) {
             return ResultModel.success();
         } else {
-            return ResultModel.error(ResultModel.OP_FAILED_ERROR);
+            return ResultModel.error(ErrorCodeEnum.OP_FAILED_ERROR.getCode());
         }
     }
 
@@ -124,7 +125,7 @@ public class SysUserController {
         if (result) {
             return ResultModel.success();
         } else {
-            return ResultModel.error(ResultModel.OP_FAILED_ERROR);
+            return ResultModel.error(ErrorCodeEnum.OP_FAILED_ERROR.getCode());
         }
     }
 

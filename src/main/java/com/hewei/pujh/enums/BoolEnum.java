@@ -1,7 +1,6 @@
 package com.hewei.pujh.enums;
 
 import lombok.Getter;
-import org.apache.commons.lang3.EnumUtils;
 
 @Getter
 public enum BoolEnum {

@@ -3,6 +3,7 @@ package com.hewei.pujh.sys.controller;
 
 import com.hewei.pujh.annotation.CurrentUser;
 import com.hewei.pujh.base.ResultModel;
+import com.hewei.pujh.enums.ErrorCodeEnum;
 import com.hewei.pujh.sys.service.ISysMenuService;
 import com.hewei.pujh.sys.vo.UserVo;
 import io.swagger.annotations.Api;
@@ -70,7 +71,7 @@ public class SysMenuController {
         if (result) {
             return ResultModel.success();
         } else {
-            return ResultModel.error(ResultModel.OP_FAILED_ERROR);
+            return ResultModel.error(ErrorCodeEnum.OP_FAILED_ERROR.getCode());
         }
     }
 }
