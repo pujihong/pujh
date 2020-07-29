@@ -5,7 +5,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-@MapperScan("com.hewei.pujh.*.mapper")
+@MapperScan("com.hewei.pujh.**.mapper")
 public class PujhApplication {
     public static void main(String[] args) {
         SpringApplication.run(PujhApplication.class, args);

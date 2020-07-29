@@ -2,8 +2,8 @@ package com.hewei.pujh.resolvers;
 
 import com.hewei.pujh.annotation.CurrentUser;
 import com.hewei.pujh.base.Constant;
-import com.hewei.pujh.sys.service.ISysUserService;
-import com.hewei.pujh.sys.vo.UserVo;
+import com.hewei.pujh.web.sys.service.ISysUserService;
+import com.hewei.pujh.web.sys.vo.UserVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
