@@ -1,4 +1,4 @@
-package com.hewei.pujh.tcp;
+package com.hewei.pujh.netty;
 
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.SocketChannel;

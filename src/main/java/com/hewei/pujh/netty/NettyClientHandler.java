@@ -1,7 +1,7 @@
-package com.hewei.pujh.tcp;
+package com.hewei.pujh.netty;
 
 import com.hewei.pujh.base.ResultModel;
-import com.hewei.pujh.tcp.entity.RequestModel;
+import com.hewei.pujh.netty.entity.RequestModel;
 import com.hewei.pujh.utils.DateUtil;
 import com.hewei.pujh.utils.FileUtil;
 import io.netty.channel.ChannelHandlerContext;

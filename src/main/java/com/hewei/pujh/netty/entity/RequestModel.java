@@ -1,4 +1,4 @@
-package com.hewei.pujh.tcp.entity;
+package com.hewei.pujh.netty.entity;
 
 import lombok.Data;
 

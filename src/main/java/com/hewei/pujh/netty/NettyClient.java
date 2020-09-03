@@ -1,4 +1,4 @@
-package com.hewei.pujh.tcp;
+package com.hewei.pujh.netty;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
